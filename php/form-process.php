@@ -1,78 +1,27 @@
 <?php
+if($_POST){
+  $email = $_POST['email'];
+  $name = $_POST['name'];
+  $phone_no = $_POST['phone_no'];  
+  $object = $_POST['objet'];
+  $message = $_POST['message'];
 
-$errorMSG = "";
+  $headers = "MIME-Version: 1.0\r\n";
+  $headers .= "Content-type: text/plain; charset=iso-8859-1\r\n";
+  $headers .= "From: $name <$email>\r\nReply-to : $name <$email>\nX-Mailer:PHP";
 
-// NAME
-if (empty($_POST["name"])) {
-    $errorMSG = "Name is required ";
-} else {
-    $name = $_POST["name"];
+  $subject="$objet";
+  $destinataire="fredymoz@gmail.com";
+  $body="$message";
+
+  if(mail($destinataire,$subject,$body,$headers)) {
+    $response['status'] = 'success';
+    $response['msg'] = 'Su consulta fue enviada';
+  } else {
+    $response['status'] = 'error';
+    $response['msg'] = 'Algo salió mal';
+  }
+
+  echo json_encode($response);
 }
-
-// EMAIL
-if (empty($_POST["email"])) {
-    $errorMSG .= "Email is required ";
-} else {
-    $email = $_POST["email"];
-}
-
-// MSG Guest
-if (empty($_POST["guest"])) {
-    $errorMSG .= "Subject is required ";
-} else {
-    $guest = $_POST["guest"];
-}
-
-
-// MSG Event
-if (empty($_POST["event"])) {
-    $errorMSG .= "Subject is required ";
-} else {
-    $event = $_POST["event"];
-}
-
-
-// MESSAGE
-if (empty($_POST["message"])) {
-    $errorMSG .= "Message is required ";
-} else {
-    $message = $_POST["message"];
-}
-
-
-$EmailTo = "fredymoz@gmail.com";
-$Subject = "Nueva consulta en Billion Graphs";
-
-// prepare email body text
-$Body = "";
-$Body .= "Name: ";
-$Body .= $name;
-$Body .= "\n";
-$Body .= "Email: ";
-$Body .= $email;
-$Body .= "\n";
-$Body .= "guest: ";
-$Body .= $guest;
-$Body .= "\n";
-$Body .= "event: ";
-$Body .= $event;
-$Body .= "\n";
-$Body .= "Message: ";
-$Body .= $message;
-$Body .= "\n";
-
-// send email
-$success = mail($EmailTo, $Subject, $Body, "From:".$email);
-
-// redirect to success page
-if ($success && $errorMSG == ""){
-   echo "success";
-}else{
-    if($errorMSG == ""){
-        echo "Something went wrong :(";
-    } else {
-        echo $errorMSG;
-    }
-}
-
 ?>
